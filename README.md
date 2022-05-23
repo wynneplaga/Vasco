@@ -6,6 +6,8 @@ A library for converting between different units of distance and displaying them
 
 ## Example use
 
+The API provides a variety of ways to specify what unit you want as your result. If you do not specify, Vasco will decide for you based on things like the magnitude of the measurement and the locale of the device.
+
 ```kotlin
 val measureOfDistance = MeasureOfDistance(5.0, UnitOfDistance.YARD)
 
