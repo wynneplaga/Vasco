@@ -36,7 +36,7 @@ val automaticResult = Vasco
 UnitizedDistance("4.57", UnitOfDistance.METER)
 // or
 UnitizedDistance("15", UnitOfDistance.FOOT)
-// depnding on the device locale
+// depending on the device locale
 ```
 
 ## Get Started
