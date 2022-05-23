@@ -16,7 +16,8 @@ val imperialResult = Vasco
 
 // Is equal to
 UnitizedDistance("15", UnitOfDistance.FOOT)
-
+```
+```kotlin
 val metricResult = Vasco
     .of(measureOfDistance)
     .unit(UnitOfDistance.KILOMETER)
@@ -25,7 +26,8 @@ val metricResult = Vasco
     
 // Is equal to
 UnitizedDistance("0.0046", UnitOfDistance.KILOMETER)
-
+```
+```kotlin
 val automaticResult = Vasco
     .of(measureOfDistance)
     .convert()
