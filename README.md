@@ -18,6 +18,7 @@ val imperialResult = Vasco
 UnitizedDistance("15", UnitOfDistance.FOOT)
 ```
 ```kotlin
+val measureOfDistance = MeasureOfDistance(5.0, UnitOfDistance.YARD)
 val metricResult = Vasco
     .of(measureOfDistance)
     .unit(UnitOfDistance.KILOMETER)
@@ -28,6 +29,7 @@ val metricResult = Vasco
 UnitizedDistance("0.0046", UnitOfDistance.KILOMETER)
 ```
 ```kotlin
+val measureOfDistance = MeasureOfDistance(5.0, UnitOfDistance.YARD)
 val automaticResult = Vasco
     .of(measureOfDistance)
     .convert()
