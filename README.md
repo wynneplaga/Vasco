@@ -1,6 +1,6 @@
 # Vasco
 
-[![Apache 2.0](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![](https://jitpack.io/v/wynneplaga/Vasco.svg)](https://jitpack.io/#wynneplaga/vasco) [![Version](https://img.shields.io/badge/API-1%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=21)
+[![Apache 2.0](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![](https://jitpack.io/v/wynneplaga/vasco.svg)](https://jitpack.io/#wynneplaga/vasco) [![Version](https://img.shields.io/badge/API-1%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=21)
 
 A library for converting between different units of distance and displaying them as strings.
 
