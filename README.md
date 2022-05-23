@@ -34,3 +34,18 @@ UnitizedDistance("4.57", UnitOfDistance.METER)
 UnitizedDistance("15", UnitOfDistance.FOOT)
 // depnding on the device locale
 ```
+
+## Get Started
+
+```gradle
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+```gradle
+dependencies {
+    implementation 'com.github.wynneplaga:Vasco:1.0.0'
+}
+```
