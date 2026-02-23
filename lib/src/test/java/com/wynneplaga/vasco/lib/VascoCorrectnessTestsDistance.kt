@@ -1,14 +1,12 @@
 package com.wynneplaga.vasco.lib
 
 import com.wynneplaga.vasco.MeasureOfDistance
-import com.wynneplaga.vasco.SystemOfMeasure
 import com.wynneplaga.vasco.UnitOfDistance
 import com.wynneplaga.vasco.Vasco
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
-import org.junit.Assert.*
-
-class VascoCorrectnessTests {
+class VascoCorrectnessTestsDistance {
 
     @Test
     fun `Uses separators correctly`() {
@@ -16,16 +14,15 @@ class VascoCorrectnessTests {
 
         val commaResult = Vasco
             .of(measureOfDistance)
-            .unit(UnitOfDistance.METER)
-            .convert()
+            .convert(UnitOfDistance.METER)
         assertEquals("1,000", commaResult.distance)
         assertEquals(UnitOfDistance.METER, commaResult.unit)
 
         val noCommaResult = Vasco
             .of(measureOfDistance)
-            .unit(UnitOfDistance.METER)
-            .insertSeparators(false)
-            .convert()
+            .convert(UnitOfDistance.METER) {
+                insertSeparators = false
+            }
         assertEquals("1000", noCommaResult.distance)
         assertEquals(UnitOfDistance.METER, noCommaResult.unit)
     }
@@ -36,16 +33,15 @@ class VascoCorrectnessTests {
 
         val metricResult = Vasco
             .of(measureOfDistance)
-            .systemOfMeasure(SystemOfMeasure.IMPERIAL)
-            .convert()
+            .convert(UnitOfDistance.FOOT)
         assertEquals("15", metricResult.distance)
         assertEquals(UnitOfDistance.FOOT, metricResult.unit)
 
         val imperialResult = Vasco
             .of(measureOfDistance)
-            .unit(UnitOfDistance.KILOMETER)
-            .lengthAfterDecimal(4)
-            .convert()
+            .convert(UnitOfDistance.KILOMETER) {
+                lengthAfterDecimal = 4
+            }
         assertEquals("0.0046", imperialResult.distance)
         assertEquals(UnitOfDistance.KILOMETER, imperialResult.unit)
     }
@@ -56,15 +52,13 @@ class VascoCorrectnessTests {
 
         val metricResult = Vasco
             .of(measureOfDistance)
-            .systemOfMeasure(SystemOfMeasure.METRIC)
-            .convert()
+            .convert(UnitOfDistance.METER)
         assertEquals("2", metricResult.distance)
         assertEquals(UnitOfDistance.METER, metricResult.unit)
 
         val imperialResult = Vasco
             .of(measureOfDistance)
-            .systemOfMeasure(SystemOfMeasure.IMPERIAL)
-            .convert()
+            .convert(UnitOfDistance.FOOT)
         assertEquals("6.56", imperialResult.distance)
         assertEquals(UnitOfDistance.FOOT, imperialResult.unit)
     }
@@ -75,39 +69,39 @@ class VascoCorrectnessTests {
 
         val zero = Vasco
             .of(measureOfDistance)
-            .systemOfMeasure(SystemOfMeasure.IMPERIAL)
-            .lengthAfterDecimal(0)
-            .convert()
+            .convert(UnitOfDistance.FOOT) {
+                lengthAfterDecimal = 0
+            }
         assertEquals("16", zero.distance)
         val one = Vasco
             .of(measureOfDistance)
-            .systemOfMeasure(SystemOfMeasure.IMPERIAL)
-            .lengthAfterDecimal(1)
-            .convert()
+            .convert(UnitOfDistance.FOOT) {
+                lengthAfterDecimal = 1
+            }
         assertEquals("16.4", one.distance)
         val two = Vasco
             .of(measureOfDistance)
-            .systemOfMeasure(SystemOfMeasure.IMPERIAL)
-            .lengthAfterDecimal(2)
-            .convert()
+            .convert(UnitOfDistance.FOOT) {
+                lengthAfterDecimal = 2
+            }
         assertEquals("16.4", two.distance)
         val three = Vasco
             .of(measureOfDistance)
-            .systemOfMeasure(SystemOfMeasure.IMPERIAL)
-            .lengthAfterDecimal(3)
-            .convert()
+            .convert(UnitOfDistance.FOOT) {
+                lengthAfterDecimal = 3
+            }
         assertEquals("16.404", three.distance)
         val four = Vasco
             .of(measureOfDistance)
-            .systemOfMeasure(SystemOfMeasure.IMPERIAL)
-            .lengthAfterDecimal(4)
-            .convert()
+            .convert(UnitOfDistance.FOOT) {
+                lengthAfterDecimal = 4
+            }
         assertEquals("16.4042", four.distance)
         val five = Vasco
             .of(measureOfDistance)
-            .systemOfMeasure(SystemOfMeasure.IMPERIAL)
-            .lengthAfterDecimal(5)
-            .convert()
+            .convert(UnitOfDistance.FOOT) {
+                lengthAfterDecimal = 5
+            }
         assertEquals("16.4042", five.distance)
     }
 

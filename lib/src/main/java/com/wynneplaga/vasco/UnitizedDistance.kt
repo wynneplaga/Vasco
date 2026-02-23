@@ -1,3 +1,4 @@
 package com.wynneplaga.vasco
 
-data class UnitizedDistance internal constructor(val distance: String, val unit: UnitOfDistance)
+@ConsistentCopyVisibility
+data class UnitizedValue<U: Unit> internal constructor(val distance: String, val unit: U)

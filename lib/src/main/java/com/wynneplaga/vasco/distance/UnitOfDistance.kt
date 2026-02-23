@@ -3,7 +3,7 @@ package com.wynneplaga.vasco
 import java.math.BigDecimal
 import java.math.MathContext.UNLIMITED
 
-enum class UnitOfDistance(val ratioToMeter: BigDecimal) {
+enum class UnitOfDistance(override val ratioToBase: BigDecimal): Unit {
     METER(1.0),
     DECIMETER(0.1),
     CENTIMETER(0.01),
@@ -23,5 +23,7 @@ enum class UnitOfDistance(val ratioToMeter: BigDecimal) {
 
     constructor(value: Double): this(value.toBigDecimal(UNLIMITED))
     constructor(value: String): this(value.toBigDecimal(UNLIMITED))
+
+    override val defaultLengthAfterDecimal: Int = 2
 
 }

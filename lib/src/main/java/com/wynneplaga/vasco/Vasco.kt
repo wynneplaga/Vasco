@@ -7,11 +7,11 @@ import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.*
 
-class Vasco private constructor(private val measureOfDistance: MeasureOfDistance) {
+class Vasco <M: Measure<*, U>, U: Unit> private constructor(private val measure: M) {
 
     companion object {
 
-        fun of(measureOfDistance: MeasureOfDistance): Vasco = Vasco(measureOfDistance)
+        fun <M: Measure<*, U>, U: Unit> of(measure: M): Vasco<M, U> = Vasco(measure)
 
         fun defaultSystemOfMeasure(): SystemOfMeasure {
             val useMetric = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -24,80 +24,37 @@ class Vasco private constructor(private val measureOfDistance: MeasureOfDistance
 
     }
 
-    private var scaleOfDistance: ScaleOfDistance? = null
+    sealed interface DesiredUnit<U: Unit> {
+        val unit: U
 
-    private var smallestScale: ScaleOfDistance? = null
+        data class Exact<U: Unit>(override val unit: U): DesiredUnit<U>
+        data class Auto<U: Unit, S: Scale<U>>(val scale: S, val systemOfMeasure: SystemOfMeasure = defaultSystemOfMeasure()): DesiredUnit<U> {
+            override val unit: U
+                get() = when (systemOfMeasure) {
+                    SystemOfMeasure.METRIC -> scale.metricUnit
+                    SystemOfMeasure.IMPERIAL -> scale.imperialUnit
+                }
+        }
+    }
 
-    private var unit: UnitOfDistance? = null
+    var insertSeparators: Boolean = true
+    var lengthAfterDecimal: Int = -1
 
-    private var systemOfMeasure: SystemOfMeasure? = null
-
-    private var insertSeparators: Boolean = true
-
-    private var lengthAfterDecimal: Int = 2
+    fun convert(intoUnit: U, block: Vasco<M, U>.() -> kotlin.Unit = {}): UnitizedValue<U> = convert(DesiredUnit.Exact(intoUnit), block)
+    fun <S: Scale<U>> convert(scale: S, systemOfMeasure: SystemOfMeasure, block: Vasco<M, U>.() -> kotlin.Unit = {}) = convert(
+        DesiredUnit.Auto(scale, systemOfMeasure), block)
 
     /**
      * Converts the give measure of distance into a formatted string and unit
      */
-    fun convert(): UnitizedDistance {
-        val unit: UnitOfDistance = if (unit != null) {
-            when {
-                scaleOfDistance != null -> throw IllegalStateException("Must not specify unit and scaleOfDistance")
-                smallestScale != null -> throw IllegalStateException("Must not specify unit and smallestScale")
-                systemOfMeasure != null -> throw IllegalStateException("Must not specify unit and systemOfMeasure")
-                else -> unit as UnitOfDistance
-            }
-        } else if (scaleOfDistance != null) {
-            when {
-                smallestScale != null -> throw IllegalStateException("Must not specify unit and smallestScale")
-                else -> {
-                    if ((systemOfMeasure ?: defaultSystemOfMeasure()) == SystemOfMeasure.METRIC) scaleOfDistance!!.metricUnit else scaleOfDistance!!.imperialUnit
-                }
-            }
-        } else {
-            if ((systemOfMeasure ?: defaultSystemOfMeasure()) == SystemOfMeasure.METRIC) {
-                when {
-                    measureOfDistance.asDistanceInUnit(UnitOfDistance.KILOMETER) >= BigDecimal(1) || smallestScale == ScaleOfDistance.LARGE -> UnitOfDistance.KILOMETER
-                    measureOfDistance.asDistanceInUnit(UnitOfDistance.METER) >= BigDecimal(1) || smallestScale == ScaleOfDistance.MEDIUM -> UnitOfDistance.METER
-                    else -> UnitOfDistance.CENTIMETER
-                }
-            } else {
-                when {
-                    measureOfDistance.asDistanceInUnit(UnitOfDistance.MILE) >= BigDecimal(1) || smallestScale == ScaleOfDistance.LARGE -> UnitOfDistance.MILE
-                    measureOfDistance.asDistanceInUnit(UnitOfDistance.FOOT) >= BigDecimal(1) || smallestScale == ScaleOfDistance.MEDIUM -> UnitOfDistance.FOOT
-                    else -> UnitOfDistance.INCH
-                }
-            }
-        }
+    fun convert(intoUnit: DesiredUnit<U>, block: Vasco<M, U>.() -> kotlin.Unit = {}): UnitizedValue<U> {
+        lengthAfterDecimal = intoUnit.unit.defaultLengthAfterDecimal
+        block(this)
         val format = NumberFormat.getInstance().apply {
             isGroupingUsed = insertSeparators
             maximumFractionDigits = lengthAfterDecimal
         }
-        return UnitizedDistance(format.format(measureOfDistance.asDistanceInUnit(unit, lengthAfterDecimal)), unit)
-    }
-
-    fun scaleOfDistance(scaleOfDistance: ScaleOfDistance): Vasco = apply {
-        this.scaleOfDistance = scaleOfDistance
-    }
-
-    fun smallestScale(smallestScale: ScaleOfDistance): Vasco = apply {
-        this.smallestScale = smallestScale
-    }
-
-    fun unit(unit: UnitOfDistance): Vasco = apply {
-        this.unit = unit
-    }
-
-    fun insertSeparators(insertSeparators: Boolean): Vasco = apply {
-        this.insertSeparators = insertSeparators
-    }
-
-    fun lengthAfterDecimal(lengthAfterDecimal: Int): Vasco = apply {
-        this.lengthAfterDecimal = lengthAfterDecimal
-    }
-
-    fun systemOfMeasure(systemOfMeasure: SystemOfMeasure): Vasco = apply {
-        this.systemOfMeasure = systemOfMeasure
+        return UnitizedValue(format.format(measure.inUnit(intoUnit.unit, lengthAfterDecimal)), intoUnit.unit)
     }
 
 }
